@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+    This plugin allows you to upload fresh builds (iOS/Android) directly to Updraft.
+</div>
