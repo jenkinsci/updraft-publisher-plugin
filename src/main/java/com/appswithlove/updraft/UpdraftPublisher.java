@@ -1,4 +1,4 @@
-package io.jenkins.plugins.sample;
+package com.appswithlove.updraft;
 
 import hudson.EnvVars;
 import hudson.Extension;
@@ -10,15 +10,12 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import hudson.util.FormValidation;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
-import javax.servlet.ServletException;
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class UpdraftPublisher extends Recorder {
@@ -120,27 +117,20 @@ public class UpdraftPublisher extends Recorder {
         return loopDone;
     }
 
-    @Symbol("greet")
+    @Symbol("Updraft Publisher")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-        public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useFrench)
-                throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.error(Messages.UpdraftPublisher_DescriptorImpl_errors_missingName());
-            return FormValidation.ok();
-        }
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             return true;
         }
 
+        @Nonnull
         @Override
         public String getDisplayName() {
             return Messages.UpdraftPublisher_DescriptorImpl_DisplayName();
         }
-
     }
 
 }

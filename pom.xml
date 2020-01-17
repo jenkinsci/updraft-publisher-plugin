@@ -85,24 +85,6 @@
             <version>3.5.0.201409260305-r</version>
         </dependency>
     </dependencies>
-
-    <!-- If you want this to appear on the wiki page:
-    <developers>
-      <developer>
-        <id>bhacker</id>
-        <name>Bob Q. Hacker</name>
-        <email>bhacker@nowhere.net</email>
-      </developer>
-    </developers> -->
-
-    <!-- Assuming you want to host on @jenkinsci:
-    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <scm>
-        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    </scm>
-    -->
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
