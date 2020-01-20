@@ -1,15 +1,16 @@
 package com.appswithlove.updraft;
 
-import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
+import hudson.model.Result;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Publisher;
-import hudson.tasks.Recorder;
+import hudson.tasks.Builder;
+import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -17,8 +18,9 @@ import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
-public class UpdraftPublisher extends Recorder {
+public class UpdraftPublisher extends Builder implements SimpleBuildStep {
 
     private final String url;
     private final String path;
@@ -46,20 +48,16 @@ public class UpdraftPublisher extends Recorder {
 
 
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-        //Get the environment
-        final EnvVars env = build.getEnvironment(listener);
-
-        //To change body of generated methods, choose Tools | Templates.
-        Runtime runtime = Runtime.getRuntime();
+    public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath filePath, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
         Process process = null;
-
+        InputStreamReader isReader = null;
+        InputStreamReader eReader = null;
         try {
-            String script = generateScript(env);
-            process = runScript(runtime, script);
+            String script = generateScript(filePath);
+            process = runScript(script);
 
             // INPUT
-            InputStreamReader isReader = new InputStreamReader(process.getInputStream());
+            isReader = new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8);
             //Creating a BufferedReader object
             BufferedReader reader = new BufferedReader(isReader);
             StringBuilder sb = new StringBuilder();
@@ -75,10 +73,10 @@ public class UpdraftPublisher extends Recorder {
 
             // When we get back success, the file was uploaded successfully
             boolean isOk = sb.toString().contains("\"success\":\"ok\"");
-            if (isOk) return true;
+            if (isOk) return;
 
-            // ERROR
-            InputStreamReader eReader = new InputStreamReader(process.getErrorStream());
+            // ERROR: In this case, we have an error and the file could not be uploaded
+            eReader = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8);
             BufferedReader errorReader = new BufferedReader(eReader);
             StringBuilder errorSb = new StringBuilder();
             String errorStr;
@@ -89,37 +87,39 @@ public class UpdraftPublisher extends Recorder {
                 listener.getLogger().println("ERROR INFORMATION:");
                 listener.getLogger().println(errorSb.toString());
             }
-
-            // Whenever success state of Updraft is "ok", the build was uploaded
-            return false;
+            throw new InterruptedException("Couldn't upload your file to updraft. Please check the error information above.");
 
         } catch (Throwable cause) {
-            listener.getLogger().println(process);
+            listener.getLogger().println(cause);
+            run.setResult(Result.FAILURE);
+        } finally {
+            try {
+                if (isReader != null) isReader.close();
+                if (eReader != null) eReader.close();
+            } catch (IOException e) {
+                System.out.println("Failed to close streams");
+            }
         }
-        return true;
     }
 
-    private Process runScript(Runtime runtime, String script) throws IOException {
-        Process process = runtime.exec(new String[]{CHOICE_OF_SHELL, "-c", script});
-        return process;
+    private Process runScript(String script) throws IOException {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.exec(new String[]{CHOICE_OF_SHELL, "-c", script});
     }
 
-    private String generateScript(EnvVars env) {
-        String loop = "for file in $(ls " + env.expand(path) + ");";
+    private String generateScript(FilePath filePath) {
+        String loop = "for file in $(ls " + filePath.child(path) + ");";
         loop += "do ";
-        String expandedName = env.expand(path);
-
         String curlRequest = loop + "curl -X PUT" +
                 " -F app=@$file" +
                 " -F build_type=Jenkins" +
                 " " + url + " --http1.1;";
-        String loopDone = curlRequest + "done;";
-        return loopDone;
+        return curlRequest + "done;";
     }
 
-    @Symbol("Updraft Publisher")
+    @Symbol("updraftPublish")
     @Extension
-    public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+    public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
