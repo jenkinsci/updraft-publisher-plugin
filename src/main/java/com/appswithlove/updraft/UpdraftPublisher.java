@@ -50,19 +50,19 @@ public class UpdraftPublisher extends Builder implements SimpleBuildStep {
     @Override
     public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath filePath, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
         Process process = null;
-        InputStreamReader isReader = null;
-        InputStreamReader eReader = null;
+        BufferedReader inputBufferedReader = null;
+        BufferedReader errorBufferedReader = null;
         try {
             String script = generateScript(filePath);
             process = runScript(script);
 
             // INPUT
-            isReader = new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8);
+            InputStreamReader processInputStreamReader = new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8);
             //Creating a BufferedReader object
-            BufferedReader reader = new BufferedReader(isReader);
+            inputBufferedReader = new BufferedReader(processInputStreamReader);
             StringBuilder sb = new StringBuilder();
             String str;
-            while ((str = reader.readLine()) != null) {
+            while ((str = inputBufferedReader.readLine()) != null) {
                 listener.getLogger().println("UPLOADING FILE to UPDRAFT...");
                 sb.append(str);
             }
@@ -76,17 +76,21 @@ public class UpdraftPublisher extends Builder implements SimpleBuildStep {
             if (isOk) return;
 
             // ERROR: In this case, we have an error and the file could not be uploaded
-            eReader = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8);
-            BufferedReader errorReader = new BufferedReader(eReader);
+            InputStreamReader errorInputStreamReader = new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8);
+            errorBufferedReader = new BufferedReader(errorInputStreamReader);
+
             StringBuilder errorSb = new StringBuilder();
+
             String errorStr;
-            while ((errorStr = errorReader.readLine()) != null) {
+            while ((errorStr = errorBufferedReader.readLine()) != null) {
                 errorSb.append(errorStr);
             }
+
             if (!errorSb.toString().equals("")) {
                 listener.getLogger().println("ERROR INFORMATION:");
                 listener.getLogger().println(errorSb.toString());
             }
+
             throw new InterruptedException("Couldn't upload your file to updraft. Please check the error information above.");
 
         } catch (Throwable cause) {
@@ -94,8 +98,8 @@ public class UpdraftPublisher extends Builder implements SimpleBuildStep {
             run.setResult(Result.FAILURE);
         } finally {
             try {
-                if (isReader != null) isReader.close();
-                if (eReader != null) eReader.close();
+                if (inputBufferedReader != null) inputBufferedReader.close();
+                if (errorBufferedReader != null) errorBufferedReader.close();
             } catch (IOException e) {
                 System.out.println("Failed to close streams");
             }
