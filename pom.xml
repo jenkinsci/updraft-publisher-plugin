@@ -97,4 +97,11 @@
             <url>https://repo.jenkins-ci.org/public/</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/jenkinsci/updraft-publisher-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/updraft-publisher-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/updraft-publisher-plugin</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>
