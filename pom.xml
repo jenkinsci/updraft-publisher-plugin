@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.appswithlove.updraft</groupId>
     <artifactId>updraft-publisher</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -101,6 +101,6 @@
         <connection>scm:git:ssh://git@github.com/jenkinsci/updraft-publisher-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/updraft-publisher-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/updraft-publisher-plugin</url>
-        <tag>updraft-publisher-1.0.0</tag>
+        <tag>updraft-publisher-1.0.1</tag>
     </scm>
 </project>
