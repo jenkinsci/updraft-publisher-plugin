@@ -4,7 +4,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/appswithlove/updraft-sdk-ios/master/LICENSE)
 [![Twitter](https://img.shields.io/badge/twitter-@GetUpdraft-blue.svg?style=flat)](https://twitter.com/GetUpdraft)
 
-This plugin allows to upload built binary files (.apk/.ipa) directly to ![www.getupdraft.com](https://getupdraft.com). 
+This plugin allows to upload built binary files (.apk/.ipa) directly to [www.getupdraft.com](https://getupdraft.com). 
 
 ![Updraft: Mobile App Distribution](img/updraft.png)
 
@@ -17,7 +17,7 @@ In order to use this plugin on your Jenkins you need to do the following steps.
 
     ![Add build step](img/addbuildstep.png)
 
-4. Enter Updraft Url (can be found on ![www.getupdraft.com](https://getupdraft.com) as part of the curl-command).
+4. Enter Updraft Url (can be found on [www.getupdraft.com](https://getupdraft.com) as part of the curl-command).
 
     ![Publisher](img/getupdraft-curl.png)
 
