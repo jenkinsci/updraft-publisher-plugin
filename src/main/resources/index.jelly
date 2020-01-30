@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-    This plugin allows you to upload fresh builds (iOS/Android) directly to Updraft.
+    This plugin uploads iOS (.ipa) and Android (.apk) builds directly to <a href="https://getupdraft.com">Updraft</a>.
 </div>

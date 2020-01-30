@@ -1,14 +1,32 @@
 # Updraft - Jenkins Publisher Plugin
 
-This plugin allows to upload built binary files (.apk/.ipa) directly to Updraft. 
+![link="https://plugins.jenkins.io/updraft-publisher"](https://img.shields.io/jenkins/plugin/v/updraft-publisher.svg)
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/appswithlove/updraft-sdk-ios/master/LICENSE)
+[![Twitter](https://img.shields.io/badge/twitter-@GetUpdraft-blue.svg?style=flat)](https://twitter.com/GetUpdraft)
 
-In order to use this plugin you need to do the following steps.
+This plugin allows to upload built binary files (.apk/.ipa) directly to ![www.getupdraft.com](https://getupdraft.com). 
 
-1. Find "Updraft Android/iOS Publisher" in the Jenkins Plugin Directory and install the latest version
-2. Create a build project / use an existing and open the "Configure" menu of that project.
+![Updraft: Mobile App Distribution](img/updraft.png)
+
+## How to use
+In order to use this plugin on your Jenkins you need to do the following steps.
+
+1. Find "Updraft Android/iOS Publisher" in the Jenkins Plugin Directory and install the latest version.
+2. Create a build project or use an existing project and open the "Configure" menu of that project.
 3. Add the "Updraft Android/iOS Publisher" as a "Build Step", after your App file is ready.
-4. Enter Updraft Url (can be found on Updraft as part of the curl-command)
-5. Enter the relative path to App file, starting from your applications main directory (e.g. app/build/outputs/apk/staging/release/mybuiltapp.apk). You are able to use asterisk (*) to target your app file (e.g. .../*.apk)  
+
+    ![Add build step](img/addbuildstep.png)
+
+4. Enter Updraft Url (can be found on ![www.getupdraft.com](https://getupdraft.com) as part of the curl-command).
+
+    ![Publisher](img/getupdraft-curl.png)
+
+5. Enter the relative path to App file, starting from your applications main directory (e.g. app/build/outputs/apk/staging/release/mybuiltapp.apk). You are able to use asterisk (*) to target your app file (e.g. .../*.apk) 
+
+    ![Publisher](img/publisher.png)
+ 
 6. Run the build. 
+
+## Error Handling
 
 If there are any errors (such as that the App file could not be found or the url was incorrect), the plugin should tell you what you need to do.
