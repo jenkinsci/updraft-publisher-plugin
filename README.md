@@ -1,6 +1,6 @@
 # Updraft - Jenkins Publisher Plugin
 
-![link="https://plugins.jenkins.io/updraft-publisher"](https://img.shields.io/jenkins/plugin/v/updraft-publisher.svg)
+[![Jenkins](https://img.shields.io/jenkins/plugin/v/updraft-publisher.svg)](https://plugins.jenkins.io/updraft-publisher)]
 [![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/appswithlove/updraft-sdk-ios/master/LICENSE)
 [![Twitter](https://img.shields.io/badge/twitter-@GetUpdraft-blue.svg?style=flat)](https://twitter.com/GetUpdraft)
 
